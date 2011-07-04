@@ -1017,3 +1017,6 @@ ElixExtra,Extra Space (Prozentual)
 ElixBlocks,Blöcke
 ElixInodes,Inodes
 ElixMounts,Mount Points
+
+#Added in sourcenav-enhance
+HighlightAllMatches,???[Highlight All Matches

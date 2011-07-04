@@ -646,13 +646,21 @@ itcl::class Editor& {
 
 	${m} add separator
 
+	${m} add command \
+	    -label "[get_indep String HighlightAllMatches]${lbl}" \
+	    -underline [get_indep Pos HighlightAllMatches] \
+	    -command "Editor&::highlight_word ${cls} [list ${string}]" \
+	    -state ${findstate}
+
+	${m} add separator
+
 	set vw ""
 	set vlen [string length ${vw}]
 
 	# View Hierarchy.
 	${m} add command \
 	    -accelerator "$sn_options(sys,alt-accelpref)+H" \
-	    -label "${vw}[get_indep String MultiClassHierarchy] ${lbl}" \
+	    -label "${vw}[get_indep String MultiClassHierarchy]${lbl}" \
 	    -underline [expr [get_indep Pos MultiClassHierarchy] + ${vlen}] \
 	    -command "sn_classtree [list ${string}]" \
 	    -state ${findstate}
@@ -660,7 +668,7 @@ itcl::class Editor& {
 	# View Class.
 	${m} add command \
 	    -accelerator "$sn_options(sys,alt-accelpref)+C" \
-	    -label "${vw}[get_indep String MultiClass] ${lbl}" \
+	    -label "${vw}[get_indep String MultiClass]${lbl}" \
 	    -underline [get_indep Pos MultiClass] \
 	    -command "sn_classbrowser [list ${string}]" \
 	    -state ${findstate}
@@ -680,7 +688,7 @@ itcl::class Editor& {
 	# View XRef.
 	${m} add command \
 	    -accelerator "$sn_options(sys,alt-accelpref)+X" \
-	    -label "${vw}[get_indep String MultiXRef] ${lbl}" \
+	    -label "${vw}[get_indep String MultiXRef]${lbl}" \
 	    -underline [get_indep Pos MultiXRef] \
 	    -command "sn_xref both [list ${xstring}] [list ""] [list ${file}]" \
 	    -state ${xref_state}
@@ -1990,6 +1998,27 @@ itcl::class Editor& {
 	}
 	catch {unset looking_list}
 	catch {unset looking_arr}
+    }
+
+    proc highlight_word {cls {string ""}} {
+	set cls [namespace tail $cls]
+	set w [${cls} editor]
+	${w} tag delete highlight
+	${w} tag configure highlight \
+	    -background yellow \
+	    -foreground red
+
+	set pos end
+	while {${pos} != ""} {
+	    set pos [eval ${w} search -exact "" \
+	    	-backwards -count len \
+		-- [list ${string}] [list ${pos}] 1.0]
+	    if {${pos} != ""} {
+		${w} tag add highlight ${pos} "${pos} + ${len} char"
+	    }
+	}
+	
+	${w} see insert
     }
 
     method RetrieveObject {} {
