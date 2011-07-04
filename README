@@ -1,2 +1,7 @@
-sourcenav-NG enhancement
+=sourcenav-NG enhancement=
+
 * highlight find words
+* integrated context window
+* integrated xref window
+* xref jump to reference
+* navigate backward and forward
